@@ -1,4 +1,4 @@
-ubq-ledger-bridge-keyring [![CircleCI](https://circleci.com/gh/ubiq/ubq-ledger-bridge-keyring.svg?style=svg)](https://circleci.com/gh/ubiq/ubq-ledger-bridge-keyring)
+ubq-ledger-bridge-keyring
 ==================
 
 An implementation of MetaMask's [Keyring interface](https://github.com/MetaMask/eth-simple-keyring#the-keyring-class-protocol), that uses a Ledger hardware wallet for all cryptographic operations.
