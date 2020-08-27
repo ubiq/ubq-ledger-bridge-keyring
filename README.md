@@ -1,4 +1,4 @@
-eth-ledger-bridge-keyring [![CircleCI](https://circleci.com/gh/MetaMask/eth-ledger-bridge-keyring.svg?style=svg)](https://circleci.com/gh/MetaMask/eth-ledger-bridge-keyring)
+ubq-ledger-bridge-keyring [![CircleCI](https://circleci.com/gh/ubiq/ubq-ledger-bridge-keyring.svg?style=svg)](https://circleci.com/gh/ubiq/ubq-ledger-bridge-keyring)
 ==================
 
 An implementation of MetaMask's [Keyring interface](https://github.com/MetaMask/eth-simple-keyring#the-keyring-class-protocol), that uses a Ledger hardware wallet for all cryptographic operations.
@@ -29,7 +29,7 @@ there are a few others:
 
 - **isUnlocked** : Returns true if we have the public key in memory, which allows to generate the list of accounts at any time
 
-- **unlock** : Connects to the Ledger device and exports the extended public key, which is later used to read the available ethereum addresses inside the Ledger account.
+- **unlock** : Connects to the Ledger device and exports the extended public key, which is later used to read the available ubiq addresses inside the Ledger account.
 
 - **setAccountToUnlock** : the index of the account that you want to unlock in order to use with the signTransaction and signPersonalMessage methods
 
