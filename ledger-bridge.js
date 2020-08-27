@@ -1,5 +1,4 @@
 'use strict'
-import 'babel-polyfill'
 
 require('buffer')
 
