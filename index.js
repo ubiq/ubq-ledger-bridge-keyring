@@ -3,16 +3,13 @@ const HDKey = require('hdkey')
 const ethUtil = require('ethereumjs-util')
 const sigUtil = require('eth-sig-util')
 
-const hdPathString = `m/44'/60'/0'`
+const hdPathString = `m/44'/108'/0'`
 const type = 'Ledger Hardware'
-const BRIDGE_URL = 'https://metamask.github.io/eth-ledger-bridge-keyring'
+const BRIDGE_URL = 'https://ubiq.github.io/ubq-ledger-bridge-keyring'
 const pathBase = 'm'
 const MAX_INDEX = 1000
 const NETWORK_API_URLS = {
-  ropsten: 'http://api-ropsten.etherscan.io',
-  kovan: 'http://api-kovan.etherscan.io',
-  rinkeby: 'https://api-rinkeby.etherscan.io',
-  mainnet: 'https://api.etherscan.io',
+  mainnet: 'https://rpc.octano.dev',
 }
 
 class LedgerBridgeKeyring extends EventEmitter {
@@ -396,11 +393,11 @@ class LedgerBridgeKeyring extends EventEmitter {
 
   _getPathForIndex (index) {
     // Check if the path is BIP 44 (Ledger Live)
-    return this._isBIP44() ? `m/44'/60'/${index}'/0/0` : `${this.hdPath}/${index}`
+    return this._isBIP44() ? `m/44'/108'/${index}'/0/0` : `${this.hdPath}/${index}`
   }
 
   _isBIP44 () {
-    return this.hdPath === `m/44'/60'/0'/0/0`
+    return this.hdPath === `m/44'/108'/0'/0/0`
   }
 
   _toLedgerPath (path) {
