@@ -219,7 +219,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 (async function () {
     var bridge = new _ledgerBridge2.default();
 })();
-console.log('MetaMask < = > Ledger Bridge initialized!');
+console.log('Sparrow < = > Ledger Bridge initialized!');
 
 },{"./ledger-bridge":1,"babel-polyfill":12}],3:[function(require,module,exports){
 "use strict";
