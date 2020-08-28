@@ -14,7 +14,7 @@ device. However there are a number of differences:
 - It does not support the `signMessage`, `signTypedData` or `exportAccount`
   methods, because Ledger devices do not support these operations.
 
-- Because extensions have limited access to browser features, there's no easy way to interact wth the Ledger Hardware wallet from the MetaMask extension. This library implements a workaround to those restrictions by injecting (on demand) an iframe to the background page of the extension, (which is hosted [here](https://metamask.github.io/eth-ledger-bridge-keyring/index.html).
+- Because extensions have limited access to browser features, there's no easy way to interact with the Ledger Hardware wallet from the Sparrow extension. This library implements a workaround to those restrictions by injecting (on demand) an iframe to the background page of the extension, (which is hosted [here](https://metamask.github.io/eth-ledger-bridge-keyring/index.html).
 
 The iframe is allowed to interact with the Ledger device (since U2F requires SSL and the iframe is hosted under https) using the libraries from [LedgerJS](https://github.com/LedgerHQ/ledgerjs) *hw-app-eth* and *hw-transport-u2f* and establishes a two-way communication channel with the extension via postMessage.
 

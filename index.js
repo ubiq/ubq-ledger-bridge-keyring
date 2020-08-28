@@ -25,7 +25,6 @@ class LedgerBridgeKeyring extends EventEmitter {
     this.paths = {}
     this.iframe = null
     this.network = 'mainnet'
-    this.implementFullBIP44 = false
     this.deserialize(opts)
     this._setupIframe()
   }
@@ -36,7 +35,6 @@ class LedgerBridgeKeyring extends EventEmitter {
       accounts: this.accounts,
       accountIndexes: this.accountIndexes,
       bridgeUrl: this.bridgeUrl,
-      implementFullBIP44: false,
     })
   }
 
@@ -45,13 +43,6 @@ class LedgerBridgeKeyring extends EventEmitter {
     this.bridgeUrl = opts.bridgeUrl || BRIDGE_URL
     this.accounts = opts.accounts || []
     this.accountIndexes = opts.accountIndexes || {}
-    this.implementFullBIP44 = opts.implementFullBIP44 || false
-
-    if (this._isBIP44()) {
-      // Remove accounts that don't have corresponding account indexes
-      this.accounts = this.accounts
-        .filter(account => Object.keys(this.accountIndexes).includes(ethUtil.toChecksumAddress(account)))
-    }
 
     return Promise.resolve()
   }
@@ -103,14 +94,7 @@ class LedgerBridgeKeyring extends EventEmitter {
           const to = from + n
           this.accounts = []
           for (let i = from; i < to; i++) {
-            let address
-            if (this._isBIP44()) {
-              const path = this._getPathForIndex(i)
-              address = await this.unlock(path)
-              this.accountIndexes[ethUtil.toChecksumAddress(address)] = i
-            } else {
-              address = this._addressFromIndex(pathBase, i)
-            }
+            const address = this._addressFromIndex(pathBase, i)
             this.accounts.push(address)
             this.page = 0
           }
@@ -158,15 +142,7 @@ class LedgerBridgeKeyring extends EventEmitter {
           tx.s = '0x00'
 
           let hdPath
-          if (this._isBIP44()) {
-            const checksummedAddress = ethUtil.toChecksumAddress(address)
-            if (!Object.keys(this.accountIndexes).includes(checksummedAddress)) {
-              reject(new Error(`Ledger: Index for address '${checksummedAddress}' not found`))
-            }
-            hdPath = this._getPathForIndex(this.accountIndexes[checksummedAddress])
-          } else {
-            hdPath = this._toLedgerPath(this._pathFromAddress(address))
-          }
+          hdPath = this._toLedgerPath(this._pathFromAddress(address))
 
           this._sendMessage({
             action: 'ledger-sign-transaction',
@@ -207,15 +183,7 @@ class LedgerBridgeKeyring extends EventEmitter {
       this.unlock()
         .then(_ => {
           let hdPath
-          if (this._isBIP44()) {
-            const checksummedAddress = ethUtil.toChecksumAddress(withAccount)
-            if (!Object.keys(this.accountIndexes).includes(checksummedAddress)) {
-              reject(new Error(`Ledger: Index for address '${checksummedAddress}' not found`))
-            }
-            hdPath = this._getPathForIndex(this.accountIndexes[checksummedAddress])
-          } else {
-            hdPath = this._toLedgerPath(this._pathFromAddress(withAccount))
-          }
+          hdPath = this._toLedgerPath(this._pathFromAddress(withAccount))
 
           this._sendMessage({
             action: 'ledger-sign-personal-message',
@@ -297,34 +265,7 @@ class LedgerBridgeKeyring extends EventEmitter {
 
     await this.unlock()
     let accounts
-    if (this._isBIP44()) {
-      accounts = await this._getAccountsBIP44(from, to)
-    } else {
-      accounts = this._getAccountsLegacy(from, to)
-    }
-    return accounts
-  }
-
-  async _getAccountsBIP44 (from, to) {
-    const accounts = []
-
-    for (let i = from; i < to; i++) {
-      const path = this._getPathForIndex(i)
-      const address = await this.unlock(path)
-      const valid = this.implementFullBIP44 ? await this._hasPreviousTransactions(address) : true
-      accounts.push({
-        address: address,
-        balance: null,
-        index: i,
-      })
-      // PER BIP44
-      // "Software should prevent a creation of an account if
-      // a previous account does not have a transaction history
-      // (meaning none of its addresses have been used before)."
-      if (!valid) {
-        break
-      }
-    }
+    accounts = this._getAccountsLegacy(from, to)
     return accounts
   }
 
@@ -392,12 +333,7 @@ class LedgerBridgeKeyring extends EventEmitter {
   }
 
   _getPathForIndex (index) {
-    // Check if the path is BIP 44 (Ledger Live)
-    return this._isBIP44() ? `m/44'/108'/${index}'/0/0` : `${this.hdPath}/${index}`
-  }
-
-  _isBIP44 () {
-    return this.hdPath === `m/44'/108'/0'/0`
+    return `${this.hdPath}/${index}`
   }
 
   _toLedgerPath (path) {
