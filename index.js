@@ -3,7 +3,7 @@ const HDKey = require('hdkey')
 const ethUtil = require('ethereumjs-util')
 const sigUtil = require('eth-sig-util')
 
-const hdPathString = `m/44'/108'/0'/0'`
+const hdPathString = `m/44'/108'/0'/0`
 const type = 'Ledger Hardware'
 const BRIDGE_URL = 'https://ubiq.github.io/ubq-ledger-bridge-keyring'
 const pathBase = 'm'
